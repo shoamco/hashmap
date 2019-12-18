@@ -86,7 +86,7 @@ public:
     template<typename U>
     friend std::ostream &operator<<(std::ostream &os, const HashMap<U> &map);
 
-    void printIndexedList(size_t index);
+
 
     T &getPairValueRef(const size_t idx, const std::string &key);
 
@@ -156,24 +156,21 @@ inline std::ostream &operator<<(std::ostream &os, const HashMap<U> &map) {
     os << "Num of Pairs: " << map.m_numOfPairs << std::endl;
 
     for (size_t i = 0; i < map.m_hashSize; ++i) {
+        typename HashMap<U>::ConstListItr it ;//const iterator(pair must const iterator)
+        std::cout << "Bucket #" << i << ": ";
+        for (it = map.m_table[i].begin(); it !=map.m_table[i].end(); ++it) {
+//            Pair pair( it->m_key,it->m_value);
+//            newHashMap.insert(it->m_key,it->m_value);
+            std::cout << "[" << it->m_key << ", " << it->m_value << "] ->";
 
+
+        }
+        std::cout << std::endl;
 //        os << "Bucket #" << i << ": ";
-        map.printIndexedList(i);
+//        map.printIndexedList(i);
 
     }
     return os;
-}
-
-template<class T>
-inline void HashMap<T>::printIndexedList(size_t index) {
-    std::list<Pair> lst = m_table[index];
-    ListItr it;
-
-    std::cout << "Bucket #" << index << ": ";
-    for (it = lst.begin(); it != lst.end(); ++it) {
-        std::cout << "[" << it->m_key << ", " << it->m_value << "] ->";
-    }
-    std::cout << std::endl;
 }
 
 template<typename T>
@@ -290,13 +287,13 @@ inline void HashMap<T>::rehash(size_t newSize) {
 template<typename T>
 inline void HashMap<T>::setHashFunc(HashFunc hashFunc) {
     m_hashFunc = hashFunc;
-//    rehash(m_hashSize );//Rearrange all keys
+    rehash(m_hashSize );//Rearrange all keys
 }
 
 template<typename T>
-inline void HashMap<T>::setHashSize(size_t hashSize) {
-    m_hashSize = hashSize;
-//    rehash(m_hashSize );//Rearrange all keys
+inline void HashMap<T>::setHashSize(size_t newHashSize) {
+
+    rehash(newHashSize );//Rearrange all keys
 
 }
 
