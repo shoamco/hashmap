@@ -200,4 +200,8 @@ inline  size_t HashMap<T>::getNumOfBucketsInUse() const{
     }
     return num_buckets;
 }
+template <typename T>
+inline size_t  HashMap<T>::getHashSize() const{
+    return m_hashSize;
+}
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
