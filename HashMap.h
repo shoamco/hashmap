@@ -267,7 +267,10 @@ inline T &HashMap<T>::operator[](const std::string &key) {
 
 template<typename T>
 inline void HashMap<T>::rehash(size_t newSize) {
-    //todo
+    /**
+      rehash-get a new size to hash table
+      and rearrange all keys in the new hash table with the new size
+     **/
     HashMap<T> newHashMap(newSize);
     for (size_t i = 0; i < m_hashSize; ++i) {
         ConstListItr it ;
