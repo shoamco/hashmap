@@ -44,3 +44,15 @@ void test_getNumOfBucketsInUse(){
 
 
 }
+void test_getter()
+{
+    std::cout << "\n*** test_getHashSize ****\n\n";
+    HashMap<int> hashMap(3);
+    hashMap.insert("shoam", 1);
+    hashMap.insert("cohen", 2);
+    std::cout << hashMap;
+    std::cout<<"getHashSize "<<hashMap.getHashSize()<<std::endl;
+    std::cout<<"getNumOfBucketsInUse "<<hashMap.getNumOfBucketsInUse()<<std::endl;
+    std::cout<<"getUtilization()  "<<hashMap.getUtilization()<<std::endl;
+
+}
