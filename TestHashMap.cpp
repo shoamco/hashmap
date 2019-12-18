@@ -31,3 +31,16 @@ void test_operator_set() {
 //    std::cout<<;
 //    hashMap[0];
 }
+void test_getNumOfBucketsInUse(){
+    std::cout << "\n*** test_getNumOfBucketsInUse ****\n\n";
+    HashMap<int> hashMap(3);
+    hashMap.insert("shoam", 1);
+    hashMap.insert("cohen", 2);
+    hashMap.insert("a", 44);
+    std::cout << hashMap;
+    std::cout<<"Num Of Buckets In Use: "<<hashMap.getNumOfBucketsInUse()<<std::endl;
+    HashMap<int> hashMap2(3);
+    std::cout<<"empty-Num Of Buckets In Use: "<<hashMap2.getNumOfBucketsInUse()<<std::endl;
+
+
+}
