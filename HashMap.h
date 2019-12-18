@@ -61,6 +61,7 @@ public:
    void printIndexedList(size_t index);
     T& getPairValueRef(const size_t idx, const std::string& key);
 
+private:
     size_t m_hashSize;
     HashTable m_table;
     HashFunc m_hashFunc;
@@ -203,5 +204,9 @@ inline  size_t HashMap<T>::getNumOfBucketsInUse() const{
 template <typename T>
 inline size_t  HashMap<T>::getHashSize() const{
     return m_hashSize;
+}
+template <typename T>
+inline float HashMap<T>::getUtilization() const{
+    return float(getNumOfBucketsInUse())/getHashSize();
 }
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
