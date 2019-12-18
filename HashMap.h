@@ -270,14 +270,17 @@ inline void HashMap<T>::rehash(size_t newSize) {
     //todo
     HashMap<T> newHashMap(newSize);
     for (size_t i = 0; i < m_hashSize; ++i) {
-        ConstListItr it = m_table[i].begin();
-//        for(it;it<m_table[i].end();++i){
-////                        newHashMap.insert(*it);
-//
-//        }
+        ConstListItr it ;
+
+
+        for (it = m_table[i].begin(); it != m_table[i].end(); ++it) {
+            Pair pair( it->m_key,it->m_value);
+            newHashMap.insert(it->m_key,it->m_value);
+        }
 
     }
     m_table = newHashMap.m_table;
+    m_hashSize=newSize;
 
 }
 
