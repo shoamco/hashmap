@@ -25,12 +25,7 @@ void test_insert() {
 }
 
 
-void test_operator_set() {
-    std::cout << "\n***test operator [] ****\n\n";
-    HashMap<int> hashMap(3);
-//    std::cout<<;
-//    hashMap[0];
-}
+
 void test_getNumOfBucketsInUse(){
     std::cout << "\n*** test_getNumOfBucketsInUse ****\n\n";
     HashMap<int> hashMap(3);
@@ -70,4 +65,14 @@ void test_remove(){
     std::cout << hashMap;
 //    std::cout << hashMap;
 //    hashMap.remove("shoam");
+}
+void test_operator_square() {
+    std::cout << "\n***test operator [] ****\n\n";
+    HashMap<int> hashMap(3);
+    hashMap.insert("shoam", 1);
+    hashMap.insert("cohen", 2);
+    std::cout << hashMap;
+    std::cout<<"hashMap[shoam]"<<hashMap["shoam"];
+    hashMap["shoam"]=99;
+    std::cout << hashMap;
 }
