@@ -252,7 +252,20 @@ inline T &HashMap<T>::operator[](const std::string &key) {
         }
     }
     exit(0);
-//    return NULL;
 }
+template<typename T>
+inline void HashMap<T>::rehash(size_t newSize ){
+    //todo
+}
+template<typename T>
+void HashMap<T>::setHashFunc(HashFunc hashFunc){
+    m_hashFunc=hashFunc;
+    rehash(m_hashSize );//Rearrange all keys
+}
+template<typename T>
+void HashMap<T>::setHashSize(size_t hashSize){
+    m_hashSize=hashSize;
+    rehash(m_hashSize );//Rearrange all keys
 
+}
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
