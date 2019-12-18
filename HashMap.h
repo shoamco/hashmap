@@ -1,13 +1,17 @@
 //
 // Created by shoam on 12/17/19.
 //
-#include "LinkedList.h"
+//#include "LinkedList.h"
 #ifndef DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
 #define DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
 #include <string>
-//#include <list>
+#include <list>
 #include <vector>
 #include <iostream>
+struct HashException : public std::invalid_argument
+{
+    explicit HashException(const std::string &reason);
+};
 typedef size_t(*HashFunc)(const std::string&, size_t);
  size_t defaultHashFunc(const std::string& key, size_t hashSize);
 inline size_t defaultHashFunc(const std::string& key, size_t hashSize)
@@ -31,58 +35,126 @@ template <typename T>
 class HashMap{
 public:
 //    explicit HashMap(size_t hashSize = HASH_TABLE_SIZE, HashFunc func = defaultHashFunc);
-     HashMap(size_t hashSize = HASH_TABLE_SIZE, HashFunc func = defaultHashFunc);
+    explicit HashMap(size_t hashSize = HASH_TABLE_SIZE, HashFunc func = defaultHashFunc);
     void insert(const std::string, const T&);
     T& operator[](const std::string&);
     const T& operator[](const std::string&) const;
 //private:
     struct Pair
     {
-        Pair(const std::string&, T);
+        Pair(const std::string& m_key, T m_value):m_key(m_key),m_value(m_value){}
         std::string m_key;
         T m_value;
     };
 
 public:
 //    typedef Pair Pair;
-    static const size_t HASH_TABLE_SIZE = 11;
-    typedef LinkedList<Pair> PairList;
-    typedef typename LinkedList<Pair>::Iterator ListItr;
-    typedef std::vector<LinkedList<Pair> > HashTable;
-//    typedef std::list<Pair> PairList;
-//
-//    typedef typename std::list<Pair>::Iterator ListItr;
-//    typedef std::vector<std::list<Pair> > HashTable;
+//    static const size_t HASH_TABLE_SIZE = 11;
+//    typedef LinkedList<Pair> PairList;
+//    typedef typename LinkedList<Pair>::Iterator ListItr;
+//    typedef std::vector<LinkedList<Pair> > HashTable;
 
+
+    static const size_t HASH_TABLE_SIZE = 72;
+    typedef std::list<Pair> PairsList;
+    typedef typename std::list<Pair>::iterator ListItr;
+    typedef typename std::list<Pair>::const_iterator ConstListItr;
+    typedef std::vector<std::list<Pair> > HashTable;
+
+
+
+
+
+
+    Pair& addPair(const Pair&, size_t, HashTable&);
+    ListItr getPairItr(const std::string&, size_t* slot = NULL);
+    void rehash(size_t newSize = 0);
+    bool isPrime(size_t);
+    size_t validateSize(size_t);
+    size_t getNearestBigEnoughPrimeSize(size_t);
+    void remove(const std::string&);
+    void setHashFunc(HashFunc);
+    void setHashSize(size_t);
+    float getUtilization() const;
+    size_t getNumOfBucketsInUse() const;
+    size_t getNumOfPairs() const;
+    size_t  getHashSize() const;
+    size_t getIndexByKey(const std::string key);
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& os, const HashMap<U>& map);
+//    friend Pair;
+   void printIndexedList(size_t index);
+    T& getPairValueRef(const size_t idx, const std::string& key);
 
     size_t m_hashSize;
     HashTable m_table;
     HashFunc m_hashFunc;
     size_t m_bucketsInUse;
     size_t m_numOfPairs;
-    Pair& addPair(const Pair&, size_t, HashTable&);
-//    ListItr getPairItr(const string&, size_t* slot = NULL);
-//    void rehash(size_t newSize = 0);
-//    bool isPrime(size_t);
-//    size_t validateSize(size_t);
-//    size_t getNearestBigEnoughPrimeSize(size_t);
-    template <typename U>
-    friend std::ostream& operator<<(std::ostream& os, const HashMap<U>& map);
     };
 template <typename T>
-inline HashMap<T>::HashMap(size_t hashSize, HashFunc func):m_hashSize(hashSize),m_table(),m_hashFunc(func),m_bucketsInUse(0),m_numOfPairs(0){
-
-    std::cout<<"\nin ctor\n";
+inline HashMap<T>::HashMap(size_t hashSize, HashFunc func) {
+    std::cout << "HashMap c-tor" << std::endl;
+    m_hashSize = hashSize;
+    m_bucketsInUse = 0;
+    m_hashFunc = func;
+    m_table = HashTable(hashSize);
+    std::cout<<"size "<<m_table.size() << std::endl;
+//    std::cout<<"m_table " << std::endl;
+//    printIndexedList(0);
 }
-
-
+//template <typename T>
+//inline HashMap<T>::HashMap(size_t hashSize, HashFunc func):m_hashSize(hashSize),m_table(),m_hashFunc(func),m_bucketsInUse(0),m_numOfPairs(0){
+//
+//    std::cout<<"\nin ctor\n";
+//    std::cout<<m_table.data();
+////    for (std::size_t i = 0; i <hashSize; ++i) {
+////        m_table.push_back(NULL);
+////    }
+////    for(size_t i=0;i<m_hashSize;++i){
+////        m_table[i];
+////    }
+//}
 template<class T>
+inline size_t HashMap<T>::getIndexByKey(const std::string key){
+    return defaultHashFunc(key,m_hashSize);
+}
+template<typename T>
 inline void HashMap<T>::insert(const std::string key, const T& value){
-    bool isPairIn = false;
-    size_t index = m_hashFunc(key,m_hashSize);
-    for (typename std::vector<T>::iterator it = m_table.begin() ; it != m_table.end(); ++it){
-        std::cout << "\t" << *it;
+    bool isPairInTable = false;
+    size_t index = getIndexByKey(key);
+    ListItr it = m_table[index].begin();
+    for(it;it!=m_table[index].end();++it){
+        if (it->m_key == key) {//if key in table-set value
+            it->m_value=value;
+            isPairInTable = true;
+            break;
+        }
     }
+        if (!isPairInTable) {//add new key to table
+          Pair pair(key, value);
+        m_table[index].push_back(pair);
+    }
+//    std::cout << "push to bucket " << index << " key: " << pair.m_key << " val: " << pair.m_value << std::endl;
+//    printIndexedList(index);
+//    typename HashMap<T>::Pair pair(key, value);
+//    ListItr it;
+//    // checks if the key is already this key
+//    for (it = m_table[index].begin(); it != m_table[index].end(); ++it) {
+//
+//        if (it->m_key == key) {
+////            it->setValue(value);
+////            it->m_value=value;
+//            isPairInTable = true;
+//            break;
+//        }
+//    }
+//    if (!isPairInTable) {
+//        // Pair pair(key, value);
+//        m_table[index].push_back(pair);
+//    }
+//    std::cout << "push to bucket " << index << " key: " << pair.m_key << " val: " << pair.m_value << std::endl;
+//    printIndexedList(index);
 }
 
 template <typename U>
@@ -93,19 +165,62 @@ inline std::ostream& operator<<(std::ostream& os, const HashMap<U>& map)
 //    ostream<<"hashMap: \n";
     os << "HashMap size: " << map.m_hashSize << std::endl;
     os << "Num of Pairs: " << map.m_numOfPairs << std::endl;
+
     for(size_t i = 0; i < map.m_hashSize; ++i)
     {
         os << "Bucket #" << i << ": ";
-//        typename LinkedList<typename HashMap<U>::Pair>::Iterator listIter = map.m_table[i].begin();
-//        for(; listIter != map.m_table[i].begin(); ++ listIter)
+        map.printIndexedList(i);
+//        os << "Bucket #" << i << ": ";
+//        typedef typename std::list<typename HashMap<U>::Pair>::iterator listIte;
+////        typename LinkedList<typename HashMap<U>::Pair>::Iterator listIter = map.m_table[i].begin();
+//        for(listIte=map.m_table[i].begin(); listIter != map.m_table[i].begin(); ++ listIter)
 //        {
 //            os << "[" << listIter->m_value.m_key << ", " << listIter->m_value.m_value << "] ->";
 //        }
-        os << std::endl;
+//        os << endl;
+////
+//        os << std::endl;
     }
     return os;
 }
-template <typename U>
 
-
+template<class T>
+inline void HashMap<T>::printIndexedList(size_t index) {
+    std::list<Pair> lst = m_table[index];
+    ListItr it;
+    std::cout << "buckets[" << index << "]: ";
+    for (it = lst.begin(); it != lst.end(); ++it) {
+//        std::cout << it->m_key << ": " << it->m_value << " <";
+        std::cout << "[" << it->m_key << ", " << it->m_value  << "] ->";
+    }
+    std::cout << std::endl;
+}
+template <typename T>
+inline T& HashMap<T>::getPairValueRef(const size_t idx, const std::string& key)
+{
+    ListItr it = m_table[idx].begin();
+    for (; it != m_table[idx].end(); ++it)
+    {
+        if ((*it).m_key == key)
+        {
+            return it->m_value.m_value;
+        }
+    }
+}
+template <typename T>
+inline T& HashMap<T>::operator[](const std::string& key)
+{
+//    size_t idx = m_hashFunc(key, getHashSize());
+    size_t idx = getIndexByKey(key);
+    ListItr it = m_table[idx].begin();
+    for (; it != m_table[idx].end(); ++it)
+    {
+        if ((*it).m_key == key)
+        {
+            return it->m_value.m_value;
+        }
+    }
+    m_table[idx].insert(Pair(key, 0));
+    return getPairValueRef(idx, key);
+}
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
