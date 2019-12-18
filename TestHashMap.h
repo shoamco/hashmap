@@ -14,4 +14,5 @@ void test_list();
 void test_insert();
 void test_getNumOfBucketsInUse();
 void test_getter();
+void test_remove();
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_TESTHASHMAP_H

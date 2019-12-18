@@ -54,5 +54,20 @@ void test_getter()
     std::cout<<"getHashSize "<<hashMap.getHashSize()<<std::endl;
     std::cout<<"getNumOfBucketsInUse "<<hashMap.getNumOfBucketsInUse()<<std::endl;
     std::cout<<"getUtilization()  "<<hashMap.getUtilization()<<std::endl;
+    std::cout<<"getValueByKey(shoam)  "<<hashMap.getValueByKey("shoam")<<std::endl;
+    std::cout<<"getValueByKey(cohen)  "<<hashMap.getValueByKey("cohen")<<std::endl;
+    std::cout<<"getValueByKey(not found)  "<<hashMap.getValueByKey("not found")<<std::endl;
 
+}
+void test_remove(){
+    std::cout << "\n*** test_remove ****\n\n";
+    HashMap<int> hashMap(3);
+    hashMap.insert("shoam", 1);
+    hashMap.insert("cohen", 2);
+    std::cout << hashMap;
+    hashMap.remove("shoam");
+    std::cout<<"after remove\n";
+    std::cout << hashMap;
+//    std::cout << hashMap;
+//    hashMap.remove("shoam");
 }
