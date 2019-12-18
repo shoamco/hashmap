@@ -63,8 +63,7 @@ void test_remove(){
     hashMap.remove("shoam");
     std::cout<<"after remove\n";
     std::cout << hashMap;
-//    std::cout << hashMap;
-//    hashMap.remove("shoam");
+
 }
 void test_operator_square() {
     std::cout << "\n***test operator [] ****\n\n";
@@ -74,5 +73,17 @@ void test_operator_square() {
     std::cout << hashMap;
     std::cout<<"hashMap[shoam]"<<hashMap["shoam"];
     hashMap["shoam"]=99;
+    std::cout << hashMap;
+}
+void test_rehash(){
+    std::cout << "\n***test operator [] ****\n\n";
+    HashMap<int> hashMap(3);
+    hashMap.insert("shoam", 1);
+    hashMap.insert("cohen", 2);
+    hashMap.insert("a", 5);
+    hashMap.insert("b", 999);
+    hashMap.insert("c", 666);
+    std::cout << hashMap;
+    hashMap.rehash(7);
     std::cout << hashMap;
 }
