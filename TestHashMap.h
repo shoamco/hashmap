@@ -8,7 +8,9 @@
 #include "HashMap.h"
 #include <iostream>
 
-void test_create_hash_map(){
+void test_create_hash_map() ;
+void test_insert() ;
+void test_list();
+void test_insert();
 
-}
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_TESTHASHMAP_H
