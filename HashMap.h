@@ -99,22 +99,9 @@ inline HashMap<T>::HashMap(size_t hashSize, HashFunc func) {
     m_bucketsInUse = 0;
     m_hashFunc = func;
     m_table = HashTable(hashSize);
-    std::cout<<"size "<<m_table.size() << std::endl;
-//    std::cout<<"m_table " << std::endl;
-//    printIndexedList(0);
+
 }
-//template <typename T>
-//inline HashMap<T>::HashMap(size_t hashSize, HashFunc func):m_hashSize(hashSize),m_table(),m_hashFunc(func),m_bucketsInUse(0),m_numOfPairs(0){
-//
-//    std::cout<<"\nin ctor\n";
-//    std::cout<<m_table.data();
-////    for (std::size_t i = 0; i <hashSize; ++i) {
-////        m_table.push_back(NULL);
-////    }
-////    for(size_t i=0;i<m_hashSize;++i){
-////        m_table[i];
-////    }
-//}
+
 template<class T>
 inline size_t HashMap<T>::getIndexByKey(const std::string key){
     return defaultHashFunc(key,m_hashSize);
@@ -135,26 +122,7 @@ inline void HashMap<T>::insert(const std::string key, const T& value){
           Pair pair(key, value);
         m_table[index].push_back(pair);
     }
-//    std::cout << "push to bucket " << index << " key: " << pair.m_key << " val: " << pair.m_value << std::endl;
-//    printIndexedList(index);
-//    typename HashMap<T>::Pair pair(key, value);
-//    ListItr it;
-//    // checks if the key is already this key
-//    for (it = m_table[index].begin(); it != m_table[index].end(); ++it) {
-//
-//        if (it->m_key == key) {
-////            it->setValue(value);
-////            it->m_value=value;
-//            isPairInTable = true;
-//            break;
-//        }
-//    }
-//    if (!isPairInTable) {
-//        // Pair pair(key, value);
-//        m_table[index].push_back(pair);
-//    }
-//    std::cout << "push to bucket " << index << " key: " << pair.m_key << " val: " << pair.m_value << std::endl;
-//    printIndexedList(index);
+
 }
 
 template <typename U>
@@ -162,13 +130,14 @@ inline std::ostream& operator<<(std::ostream& os, const HashMap<U>& map)
 {
 
 
-//    ostream<<"hashMap: \n";
+    os<<"\n*****hashMap:**** \n";
     os << "HashMap size: " << map.m_hashSize << std::endl;
     os << "Num of Pairs: " << map.m_numOfPairs << std::endl;
 
     for(size_t i = 0; i < map.m_hashSize; ++i)
     {
-        os << "Bucket #" << i << ": ";
+
+//        os << "Bucket #" << i << ": ";
         map.printIndexedList(i);
 //        os << "Bucket #" << i << ": ";
 //        typedef typename std::list<typename HashMap<U>::Pair>::iterator listIte;
@@ -188,9 +157,9 @@ template<class T>
 inline void HashMap<T>::printIndexedList(size_t index) {
     std::list<Pair> lst = m_table[index];
     ListItr it;
-    std::cout << "buckets[" << index << "]: ";
+
+    std::cout <<"Bucket #" << index << ": ";
     for (it = lst.begin(); it != lst.end(); ++it) {
-//        std::cout << it->m_key << ": " << it->m_value << " <";
         std::cout << "[" << it->m_key << ", " << it->m_value  << "] ->";
     }
     std::cout << std::endl;
