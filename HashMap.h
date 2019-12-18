@@ -7,6 +7,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <iostream>
 typedef size_t(*HashFunc)(const std::string&, size_t);
 size_t defaultHashFunc(const std::string&, size_t);
 template <typename T>
@@ -32,7 +33,7 @@ private:
     HashFunc m_hashFunc;
     size_t m_bucketsInUse;
     size_t m_numOfPairs;
-//    Pair& addPair(const Pair&, size_t, HashTable&);
+    Pair& addPair(const Pair&, size_t, HashTable&);
 //    ListItr getPairItr(const string&, size_t* slot = NULL);
 //    void rehash(size_t newSize = 0);
 //    bool isPrime(size_t);
@@ -43,4 +44,16 @@ private:
     };
 //template <typename T>
 //inline HashMap<T>::HashMap(size_t hashSize, HashFunc func):m_hashSize(hashSize),m_hashFunc(func){}
+
+
+template<class T>
+inline void HashMap<T>::insert(const std::string key, const T& value){
+    bool isPairIn = false;
+    size_t index = m_hashFunc(key);
+    for (typename std::vector<T>::iterator it = m_table.begin() ; it != m_table.end(); ++it){
+        std::cout << "\t" << *it;
+    }
+}
+
+
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
