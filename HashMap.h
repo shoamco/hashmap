@@ -176,19 +176,7 @@ inline T &HashMap<T>::getPairValueRef(const size_t idx, const std::string &key) 
     }
 }
 
-template<typename T>
-inline T &HashMap<T>::operator[](const std::string &key) {
-//    size_t idx = m_hashFunc(key, getHashSize());
-    size_t idx = getIndexByKey(key);
-    ListItr it = m_table[idx].begin();
-    for (; it != m_table[idx].end(); ++it) {
-        if ((*it).m_key == key) {
-            return it->m_value.m_value;
-        }
-    }
-    m_table[idx].insert(Pair(key, 0));
-    return getPairValueRef(idx, key);
-}
+
 
 inline size_t defaultHashFunc(const std::string &key, size_t hashSize) {
     /**
@@ -251,7 +239,20 @@ inline T HashMap<T>::getValueByKey(const std::string key) {
         }
     }
     return NULL;
+//    exit(0);
 
+}
+template<typename T>
+inline T &HashMap<T>::operator[](const std::string &key) {
+    size_t idx = getIndexByKey(key);
+    ListItr it = m_table[idx].begin();
+    for (; it != m_table[idx].end(); ++it) {
+        if ((*it).m_key == key) {
+            return it->m_value;
+        }
+    }
+    exit(0);
+//    return NULL;
 }
 
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
