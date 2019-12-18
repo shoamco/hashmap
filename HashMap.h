@@ -90,14 +90,21 @@ public:
 
     T &getPairValueRef(const size_t idx, const std::string &key);
 
+    HashTable m_table;
 private:
     size_t m_hashSize;
-    HashTable m_table;
+
     HashFunc m_hashFunc;
     size_t m_bucketsInUse;
     size_t m_numOfPairs;
+
+    HashMap &operator=(const HashFunc &);//private assignment operator
 };
 
+//template<typename T>
+//inline HashMap<T> HashMap<T>::&operator=(const HashFunc &){
+//
+//}
 template<typename T>
 inline HashMap<T>::HashMap(size_t hashSize, HashFunc func) {
 //    std::cout << "HashMap c-tor" << std::endl;
@@ -105,6 +112,8 @@ inline HashMap<T>::HashMap(size_t hashSize, HashFunc func) {
     m_bucketsInUse = 0;
     m_hashFunc = func;
     m_table = HashTable(hashSize);
+    m_numOfPairs = 0;
+
 
 }
 
@@ -133,6 +142,7 @@ inline void HashMap<T>::insert(const std::string key, const T &value) {
     if (!isPairInTable) {//add new key to table
         Pair pair(key, value);
         m_table[index].push_back(pair);
+        m_numOfPairs++;
     }
 
 }
@@ -175,7 +185,6 @@ inline T &HashMap<T>::getPairValueRef(const size_t idx, const std::string &key) 
         }
     }
 }
-
 
 
 inline size_t defaultHashFunc(const std::string &key, size_t hashSize) {
@@ -225,6 +234,7 @@ inline void HashMap<T>::remove(const std::string &key) {
     ListItr it = m_table[index].begin();
     Pair pair(key, getValueByKey(key));
     m_table[index].remove(pair);
+    --m_numOfPairs;
 
 }
 
@@ -242,6 +252,7 @@ inline T HashMap<T>::getValueByKey(const std::string key) {
 //    exit(0);
 
 }
+
 template<typename T>
 inline T &HashMap<T>::operator[](const std::string &key) {
     size_t idx = getIndexByKey(key);
@@ -253,19 +264,40 @@ inline T &HashMap<T>::operator[](const std::string &key) {
     }
     exit(0);
 }
+
 template<typename T>
-inline void HashMap<T>::rehash(size_t newSize ){
+inline void HashMap<T>::rehash(size_t newSize) {
     //todo
-}
-template<typename T>
-void HashMap<T>::setHashFunc(HashFunc hashFunc){
-    m_hashFunc=hashFunc;
-    rehash(m_hashSize );//Rearrange all keys
-}
-template<typename T>
-void HashMap<T>::setHashSize(size_t hashSize){
-    m_hashSize=hashSize;
-    rehash(m_hashSize );//Rearrange all keys
+    HashMap<T> newHashMap(newSize);
+    for (size_t i = 0; i < m_hashSize; ++i) {
+        ConstListItr it = m_table[i].begin();
+//        for(it;it<m_table[i].end();++i){
+////                        newHashMap.insert(*it);
+//
+//        }
+
+    }
+    m_table = newHashMap.m_table;
 
 }
+
+template<typename T>
+inline void HashMap<T>::setHashFunc(HashFunc hashFunc) {
+    m_hashFunc = hashFunc;
+//    rehash(m_hashSize );//Rearrange all keys
+}
+
+template<typename T>
+inline void HashMap<T>::setHashSize(size_t hashSize) {
+    m_hashSize = hashSize;
+//    rehash(m_hashSize );//Rearrange all keys
+
+}
+
+template<typename T>
+
+inline size_t HashMap<T>::getNumOfPairs() const {
+    return m_numOfPairs;
+}
+
 #endif //DATA_STRUCTURES_HASHMAP_TEMPLATED_SHOAMCO_HASHMAP_H
